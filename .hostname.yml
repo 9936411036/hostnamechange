@@ -4,14 +4,16 @@ type: docker
 
 steps:
   - name: Change Hostname to randi
-    image: python:3.10  # This image comes with ssh command pre-installed
+    image: alpine:latest  # Using your existing base image
     environment:
-      SSH_USER: "vikas"  # The SSH username
-      SSH_PASS:
-        from_secret: MY_PASS  # Retrieve SSH password from Drone secret
-      DEVICE_IP: "192.168.1.14"  # The device IP address
+      SSH_USER: "vikas"  # SSH username
+      DEVICE_IP: "192.168.1.14"  # Device IP address
+      SSH_PASS: "tapesh"  # The password for SSH authentication
     commands:
-      # Use sshpass with the provided password to SSH into the device and change the hostname
+      # Install sshpass (needed for password-based SSH automation)
+      - apk update
+      - apk add --no-cache sshpass
+      # Run SSH command to change hostname using password
       - echo "$SSH_PASS" | sshpass ssh -o StrictHostKeyChecking=no -o HostkeyAlgorithms=ssh-rsa $SSH_USER@$DEVICE_IP "conf t; hostname randi; end; write memory"
 
 trigger:
