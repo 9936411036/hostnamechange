@@ -14,7 +14,7 @@ steps:
       # Force pseudo-terminal allocation (-t)
       - sshpass -p "$SSH_PASS" ssh -t -o StrictHostKeyChecking=no -o HostkeyAlgorithms=+ssh-rsa $SSH_USER@$DEVICE_IP <<EOF
           enable
-          tapesh
+          Tapesh@123456
           conf t
           hostname randi
           router bgp 65001
