@@ -9,8 +9,6 @@ steps:
       SSH_USER: "tapesh"
       SSH_PASS: "tapesh"
     commands:
-      - apk update
-      - apk add --no-cache openssh sshpass
       - sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no -o HostkeyAlgorithms=+ssh-rsa $SSH_USER@$DEVICE_IP <<EOF
           enable
           tapesh
