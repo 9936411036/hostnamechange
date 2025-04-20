@@ -4,17 +4,13 @@ type: docker
 
 steps:
   - name: Change Hostname to randi
-    image: alpine:latest
+    image: alpine:latest  # Alpine image
     environment:
       SSH_USER: "vikas"
       DEVICE_IP: "192.168.1.14"
+      SSH_PASS: "tapesh"
     commands:
-      # Set up SSH agent and load the private key from the environment or file
-      - apk update
-      - apk add --no-cache openssh-client
-      - eval $(ssh-agent -s)
-      - echo "$SSH_PRIVATE_KEY" | ssh-add -
-      # Run SSH command to change hostname
+      # Run the SSH command, will require manual password input
       - ssh -o StrictHostKeyChecking=no -o HostkeyAlgorithms=ssh-rsa $SSH_USER@$DEVICE_IP "conf t; hostname randi; end; write memory"
 
 trigger:
