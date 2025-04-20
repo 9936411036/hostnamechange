@@ -1,9 +1,9 @@
 kind: pipeline
 type: docker
-name: configure-cisco-iosxe
+name: configure-cisco-router
 
 steps:
-  - name: configure-router
+  - name: configure-ios-xe
     image: alpine:latest
     environment:
       SSH_USER: tapesh
