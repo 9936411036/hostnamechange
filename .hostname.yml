@@ -3,13 +3,15 @@ name: Change Hostname on Network Device
 
 steps:
   - name: Change Hostname to randi
-    image: alpine:latest  # Use the Alpine Linux image
+    image: alpine:latest
     environment:
       SSH_USER: "vikas"        # SSH username
       DEVICE_IP: "192.168.1.14"  # IP address of the network device
       SSH_PASS: "tapesh"         # SSH password
     commands:
-      - apk add --no-cache sshpass  # Install sshpass tool
+      # Install sshpass using apk package manager
+      - apk update && apk add --no-cache sshpass
+      - sshpass -V  # Confirm if sshpass is installed successfully
       - echo "$SSH_PASS" | sshpass ssh -o StrictHostKeyChecking=no -o HostkeyAlgorithms=ssh-rsa $SSH_USER@$DEVICE_IP "conf t; hostname randi; end; write memory"  # Change hostname command
 
 trigger:
