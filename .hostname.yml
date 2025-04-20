@@ -13,7 +13,7 @@ steps:
     commands:
       - apk add --no-cache openssh sshpass
       - |
-        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no -o HostkeyAlgorithms=+ssh-rsa $SSH_USER@$DEVICE_IP <<EOF
+        sshpass -p "$SSH_PASS" ssh -tt -o StrictHostKeyChecking=no -o HostkeyAlgorithms=+ssh-rsa $SSH_USER@$DEVICE_IP << EOF
         enable
         tapesh
         conf t
