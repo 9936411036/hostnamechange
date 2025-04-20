@@ -6,15 +6,16 @@ steps:
   - name: Change Hostname to randi
     image: alpine:latest
     environment:
-      SSH_USER: "vikas"  # SSH username
-      DEVICE_IP: "192.168.1.14"  # Device IP address
-      SSH_PASS: "tapesh"  # The password for SSH authentication
+      SSH_USER: "vikas"
+      DEVICE_IP: "192.168.1.14"
     commands:
-      # Install sshpass for automating password-based authentication
+      # Set up SSH agent and load the private key from the environment or file
       - apk update
-      - apk add --no-cache sshpass
-      # Run SSH command to change hostname using password
-      - echo "$SSH_PASS" | sshpass ssh -o StrictHostKeyChecking=no -o HostkeyAlgorithms=ssh-rsa $SSH_USER@$DEVICE_IP "conf t; hostname randi; end; write memory"
+      - apk add --no-cache openssh-client
+      - eval $(ssh-agent -s)
+      - echo "$SSH_PRIVATE_KEY" | ssh-add -
+      # Run SSH command to change hostname
+      - ssh -o StrictHostKeyChecking=no -o HostkeyAlgorithms=ssh-rsa $SSH_USER@$DEVICE_IP "conf t; hostname randi; end; write memory"
 
 trigger:
   branch:
