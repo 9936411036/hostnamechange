@@ -1,27 +1,25 @@
 kind: pipeline
-type: docker
-name: configure-cisco-iosxe
+name: default
 
 steps:
-  - name: configure-router
+  - name: change-hostname-and-bgp
     image: alpine:latest
     environment:
-      SSH_USER: tapesh
-      SSH_PASS:
-        from_secret: MY_PASS
-      DEVICE_IP: 192.168.1.6
+      DEVICE_IP: "192.168.1.6"
+      SSH_USER: "tapesh"
+      SSH_PASS: "tapesh"
     commands:
+      - apk update
       - apk add --no-cache openssh sshpass
-      - |
-        sshpass -p "$SSH_PASS" ssh -tt -o StrictHostKeyChecking=no -o HostkeyAlgorithms=+ssh-rsa $SSH_USER@$DEVICE_IP << 'EOF'
-        enable
-        tapesh
-        conf t
-        hostname randi
-        router bgp 65001
-         bgp router-id 1.1.1.1
-         network 192.168.1.0 mask 255.255.255.0
-        end
-        write memory
-        exit
+      - sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no -o HostkeyAlgorithms=+ssh-rsa $SSH_USER@$DEVICE_IP <<EOF
+          enable
+          tapesh
+          conf t
+          hostname randi
+          router bgp 65001
+          bgp router-id 1.1.1.1
+          network 192.168.1.0 mask 255.255.255.0
+          end
+          write memory
+          exit
         EOF
