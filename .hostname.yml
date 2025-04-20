@@ -7,7 +7,8 @@ steps:
     image: alpine:latest  # Minimal image to run SSH commands
     environment:
       SSH_USER: "vikas"  # The SSH username
-      SSH_PASS: "tapesh"  # The SSH password
+      SSH_PASS:
+        from_secret: MY_PASS  # Retrieve SSH password from Drone secret
       DEVICE_IP: "192.168.1.14"  # The device IP address
     commands:
       # Install OpenSSH client for SSH connection
