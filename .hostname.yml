@@ -1,28 +1,18 @@
 kind: pipeline
 name: Change Hostname on Network Device
-type: docker
 
 steps:
   - name: Change Hostname to randi
-    image: alpine:latest  # Alpine image
+    image: alpine:latest  # Use the Alpine Linux image
     environment:
-      SSH_USER: "vikas"
-      DEVICE_IP: "192.168.1.14"
-    volumes:
-      - name: ssh-key
-        path: /root/.ssh
+      SSH_USER: "vikas"        # SSH username
+      DEVICE_IP: "192.168.1.14"  # IP address of the network device
+      SSH_PASS: "tapesh"         # SSH password
     commands:
-      - mkdir -p /root/.ssh
-      - echo "$SSH_PRIVATE_KEY" > /root/.ssh/id_rsa
-      - chmod 600 /root/.ssh/id_rsa
-      - ssh -o StrictHostKeyChecking=no -o HostkeyAlgorithms=ssh-rsa $SSH_USER@$DEVICE_IP "conf t; hostname randi; end; write memory"
+      - apk add --no-cache sshpass  # Install sshpass tool
+      - echo "$SSH_PASS" | sshpass ssh -o StrictHostKeyChecking=no -o HostkeyAlgorithms=ssh-rsa $SSH_USER@$DEVICE_IP "conf t; hostname randi; end; write memory"  # Change hostname command
 
 trigger:
   branch:
     include:
       - main
-
-volumes:
-  - name: ssh-key
-    host:
-      path: /path/to/your/ssh/private/key  # Provide the path to your private key
